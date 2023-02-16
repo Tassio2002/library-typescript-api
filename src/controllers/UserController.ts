@@ -17,13 +17,11 @@ export class UserController {
         email,
         password,
       });
-
       await userRepository.save(newUser);
-
       return res.status(201).json(newUser);
     } catch (error) {
       console.log(error);
-      res.status(500).send({
+      return res.status(500).send({
         "error message": "Internal Server Error",
       });
     }
