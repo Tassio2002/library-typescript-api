@@ -1,14 +1,20 @@
 import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
+import { UserSchema } from "../schemas/UserSchema";
 
 export class UserController {
   async signup(req: Request, res: Response) {
     const { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-      res.status(400).send({
-        "error message": "All requested information is required.",
-      });
+    const requestValidation = UserSchema.safeParse({
+      name,
+      email,
+      password,
+    });
+
+    if (requestValidation.success !== true) {
+      const errorMessage = requestValidation.error.issues[0].message;
+      return res.status(400).json(errorMessage);
     }
 
     try {
