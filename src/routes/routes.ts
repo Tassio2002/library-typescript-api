@@ -4,7 +4,8 @@ import { schemaValidation } from "../middlewares/schemaValidation";
 import { UserSchema } from "../schemas/UserSchema";
 
 const router = Router();
-router.use(schemaValidation(UserSchema));
-router.post("/signup", new UserController().signup);
+let signup = new UserController().signup
+
+router.post("/signup", schemaValidation(UserSchema), signup);
 
 export default router;
