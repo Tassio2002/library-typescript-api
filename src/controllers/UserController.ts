@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { encrypt } from "../middlewares/encrypt";
+import { encrypt } from "../security/encrypt";
 import { userRepository } from "../repositories/userRepository";
 export class UserController {
   async signup(req: Request, res: Response) {
