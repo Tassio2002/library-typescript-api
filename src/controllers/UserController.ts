@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
-import { schemaValidation } from "../middlewares/schemaValidation";
+import { encrypt } from "../security/encrypt";
 import { userRepository } from "../repositories/userRepository";
-import { UserSchema } from "../schemas/UserSchema";
 export class UserController {
   async signup(req: Request, res: Response) {
     const { name, email, password } = req.body;
+
+    const passwordHash = await encrypt(password);
 
     try {
       const newUser = userRepository.create({
         name,
         email,
-        password,
+        password: passwordHash,
       });
       await userRepository.save(newUser);
       return res.status(201).json(newUser);
