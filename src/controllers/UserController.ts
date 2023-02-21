@@ -24,30 +24,32 @@ export class UserController {
     }
   }
 
-  async createBook (req: Request, res: Response) {
-    const {title, quantity, image_url} = req.body
-    const {user_id} = req.params
+  async createBook(req: Request, res: Response) {
+    const { title, quantity, image_url } = req.body;
+    const { user_id } = req.params;
 
     try {
-        const user = await userRepository.findOneBy({id: Number(user_id)})
+      const user = await userRepository.findOneBy({ id: Number(user_id) });
 
-        if (!user) {
-          return res.status(404).json({message: "User not found"})
-        }
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
 
-        const newBook = BookRepository.create({
-          title,
-          quantity,
-          image_url,
-          user
-        })
+      const newBook = BookRepository.create({
+        title,
+        quantity,
+        image_url,
+        user,
+      });
 
-        await BookRepository.save(newBook)
+      await BookRepository.save(newBook);
 
-        return res.status(201).json(newBook)
-
+      return res.status(201).json(newBook);
     } catch (error) {
-        
+      console.log(error);
+      return res.status(500).send({
+        "error message": "Internal Server Error",
+      });
     }
-}
+  }
 }
