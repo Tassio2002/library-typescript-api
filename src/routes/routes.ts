@@ -5,10 +5,11 @@ import { schemaValidation } from "../middlewares/schemaValidation";
 import { UserSchema } from "../schemas/UserSchema";
 
 const router = Router();
-let signup = new UserController().signup
+const userController = new UserController()
+const bookController = new BookController()
 
-router.post("/signup", schemaValidation(UserSchema), new UserController().signup);
-router.post("/book/:user_id/create", new UserController().createBook)
-router.get("/book/all_books", new BookController().list)
+router.post("/signup", schemaValidation(UserSchema), userController.signup);
+router.post("/book/:user_id/create", userController.createBook)
+router.get("/book/all_books", bookController.list)
 
 export default router;
