@@ -4,6 +4,7 @@ import { decryptPassword } from "../security/decrypt";
 import { userRepository } from "../repositories/userRepository";
 import jwt from "jsonwebtoken";
 import { BookRepository } from "../repositories/BookRepositorry";
+
 export class UserController {
   async signup(req: Request, res: Response) {
     const { name, email, password } = req.body;
@@ -47,6 +48,7 @@ export class UserController {
     const verifyPassword = await decryptPassword(password, user.password);
 
     if (!verifyPassword) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_PASS ?? "", {
