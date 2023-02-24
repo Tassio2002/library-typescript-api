@@ -3,6 +3,7 @@ import { encrypt } from "../security/encrypt";
 import { decryptPassword } from "../security/decrypt";
 import { userRepository } from "../repositories/userRepository";
 import jwt from "jsonwebtoken";
+import { BookRepository } from "../repositories/BookRepositorry";
 export class UserController {
   async signup(req: Request, res: Response) {
     const { name, email, password } = req.body;
@@ -58,5 +59,34 @@ export class UserController {
       user: userLogin,
       token: token,
     });
+  }
+
+  async createBook(req: Request, res: Response) {
+    const { title, quantity, image_url } = req.body;
+    const { user_id } = req.params;
+
+    try {
+      const user = await userRepository.findOneBy({ id: Number(user_id) });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const newBook = BookRepository.create({
+        title,
+        quantity,
+        image_url,
+        user,
+      });
+
+      await BookRepository.save(newBook);
+
+      return res.status(201).json(newBook);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        "error message": "Internal Server Error",
+      });
+    }
   }
 }
