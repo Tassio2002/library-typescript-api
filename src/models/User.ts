@@ -8,7 +8,7 @@ export class User {
 
   @Column({ type: "text" })
   name: string;
-
+//alterar email para unico
   @Column({ type: "text" })
   email: string;
 
