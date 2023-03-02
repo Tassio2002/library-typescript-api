@@ -13,6 +13,8 @@ const bookController = new BookController()
 
 router.post("/signup", schemaValidation(UserSchema), userController.signup);
 router.post("/login", schemaValidation(LoginSchema), userController.login);
+router.post("/create_reserve/:user_logged/:book_id", bookController.createReserve);
+
 
 router.use(authMiddleware)
 

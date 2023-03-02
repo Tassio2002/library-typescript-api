@@ -1,8 +1,9 @@
 import 'dotenv/config'
 import 'reflect-metadata'
 import { DataSource } from "typeorm";
-import { default1676487373018 } from './migrations/1676487373018-default';
+import { default1677707331957 } from './migrations/1677707331957-default';
 import { Book } from './models/Book';
+import { Reserve } from './models/Reserve';
 import { User } from './models/User';
 
 
@@ -13,6 +14,6 @@ export const AppDataSource = new DataSource({
     port: 3333,
     synchronize: true,
     logging: true,
-    entities: [User, Book],
-    migrations: [default1676487373018],
+    entities: [User, Book, Reserve],
+    migrations: [default1677707331957],
 })

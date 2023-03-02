@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Book } from "./Book";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("users")
 export class User {
@@ -15,11 +14,9 @@ export class User {
   @Column({ type: "text" })
   password: string;
 
-  @Column("int", { array: true, nullable: true })
-  @OneToMany(() => Book, book => book.user)
-  books_registered: Book[];
+  @Column("int", { array: true, nullable: true, default: [] })
+  books_registered: number[];
 
-  @Column("int", { array: true, nullable: true })
-  @OneToMany(() => Book, book => book.user)
-  books_reserved: Book[];
+  @Column("int", { array: true, nullable: true, default: []})
+  books_reserved: number[];
 }

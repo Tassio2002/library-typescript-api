@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from "typeorm";
-import { User } from "./User";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity('books')
 export class Book {
@@ -14,8 +13,4 @@ export class Book {
 
     @Column({ type: "text", nullable: true })
     image_url: string
-
-    @ManyToOne(() => User, user => user.books_registered)
-    @JoinColumn({ name: 'user_id' })
-    user: User
 }
