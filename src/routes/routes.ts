@@ -22,7 +22,6 @@ router.post(
 router.get("/user/all_users", userController.list);
 
 router.use(authMiddleware);
-router.use(authMiddleware);
 
 router.post(
   "/book/:user_id/create",
