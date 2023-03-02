@@ -36,12 +36,12 @@ export class BookController {
 
       if (!userLogged) {
         return res
-          .status(404)
+          .status(400)
           .json({ message: "User not found, please signup" });
       }
 
       if (!book) {
-        return res.status(404).json({ message: "Book not found" });
+        return res.status(400).json({ message: "Book not found" });
       }
 
       //-----------Tentar transformar em função(verifica se o livro escolhido pertence ao usuário logado)------------//
@@ -99,6 +99,58 @@ export class BookController {
       booksReserved.push(book.id);
       userRepository.save(userLogged);
       return res.status(201).json(userLogged);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        "error message": "Internal Server Error",
+        error,
+      });
+    }
+  }
+
+  async bookDevolution(req: Request, res: Response) {
+    const { user_id, book_id } = req.params;
+
+    try {
+      const userId = Number(user_id);
+      const bookId = Number(book_id);
+      const user = await userRepository.findOneBy({ id: userId });
+      const book = await BookRepository.findOneBy({ id: bookId });
+
+      if (!user) {
+        return res.status(400).json({
+          message: "User not found, please signup",
+        });
+      }
+
+      if (!book) {
+        return res.status(400).json({ message: "Book not found" });
+      }
+
+      const booksReserved = user.books_reserved;
+      let isBookReserved: boolean = false;
+      booksReserved.forEach((id) => {
+        if (id === bookId) {
+          isBookReserved = true;
+        }
+      });
+
+      if (isBookReserved === false) {
+        return res.status(400).json({
+          message: "This book is not in your reserved books.",
+        });
+      }
+
+      const bookToRemove = booksReserved.indexOf(bookId);
+      booksReserved.splice(bookToRemove, 1);
+
+      book.quantity += 1;
+
+      userRepository.save(user);
+      BookRepository.save(book);
+      return res.status(200).json({
+        message: `The book with id: ${bookId} was successfully returned.`,
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).send({
