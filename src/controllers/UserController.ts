@@ -69,6 +69,18 @@ export class UserController {
     }
   }
 
+  async list(req: Request, res: Response) {
+    try {
+      const users = await userRepository.find();
+      return res.status(200).json({ users });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({
+        "error message": "Internal Server Error",
+      });
+    }
+  }
+
   async createBook(req: Request, res: Response) {
     const { title, quantity, image_url } = req.body;
     const { user_id } = req.params;
