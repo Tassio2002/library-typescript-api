@@ -84,7 +84,6 @@ export class UserController {
         title,
         quantity,
         image_url,
-        user,
       });
 
       await BookRepository.save(newBook);
