@@ -107,4 +107,8 @@ export class BookController {
       });
     }
   }
+
+  async searchBookByTitle(req: Request, res: Response) {
+    
+  }
 }
