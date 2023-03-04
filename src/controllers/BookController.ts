@@ -127,21 +127,15 @@ export class BookController {
         return res.status(400).json({ message: "Book not found" });
       }
 
-      const {books_reserved} = user
+      const { books_reserved } = user;
 
-      let isBookReserved: boolean = false;
-      books_reserved.forEach((id) => {
-        if (id === bookId) {
-          isBookReserved = true;
-        }
-      });
-
+      const isBookReserved = books_reserved.includes(bookId);
+      console.log(isBookReserved)
       if (isBookReserved === false) {
         return res.status(400).json({
           message: "This book is not in your reserved books.",
         });
       }
-
       const bookToRemove = books_reserved.indexOf(bookId);
       books_reserved.splice(bookToRemove, 1);
 
