@@ -110,10 +110,9 @@ export class BookController {
 
   async bookDevolution(req: Request, res: Response) {
     const { user_id, book_id } = req.params;
-
+    const userId = Number(user_id);
+    const bookId = Number(book_id);
     try {
-      const userId = Number(user_id);
-      const bookId = Number(book_id);
       const user = await userRepository.findOneBy({ id: userId });
       const book = await BookRepository.findOneBy({ id: bookId });
 
@@ -130,8 +129,8 @@ export class BookController {
       const { books_reserved } = user;
 
       const isBookReserved = books_reserved.includes(bookId);
-      console.log(isBookReserved)
-      if (isBookReserved === false) {
+
+      if (!isBookReserved) {
         return res.status(400).json({
           message: "This book is not in your reserved books.",
         });
@@ -141,8 +140,8 @@ export class BookController {
 
       book.quantity += 1;
 
-      userRepository.save(user);
-      BookRepository.save(book);
+      await Promise.all([userRepository.save(user), BookRepository.save(book)])
+      
       return res.status(200).json({
         message: `The book with id: ${bookId} was successfully returned.`,
       });
