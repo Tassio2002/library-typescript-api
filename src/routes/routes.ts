@@ -20,6 +20,7 @@ router.post(
   bookController.createReserve
 );
 router.get("/user/all_users", userController.list);
+router.get("/book/search_book", bookController.searchBookByTitle)
 router.post("/book/book_devolution/:user_id/:book_id", bookController.bookDevolution)
 
 router.use(authMiddleware);
