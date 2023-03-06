@@ -7,6 +7,7 @@ import { schemaValidation } from "../middlewares/schemaValidation";
 import { BookSchema } from "../schemas/BookSchema";
 import { LoginSchema } from "../schemas/LoginSchema";
 import { UserSchema } from "../schemas/UserSchema";
+import { SearchSchema } from "../schemas/SearchSchema";
 
 const router = Router();
 const userController = new UserController();
@@ -20,6 +21,7 @@ router.post(
   bookController.createReserve
 );
 router.get("/user/all_users", userController.list);
+router.get("/book/search_book", schemaValidation(SearchSchema), bookController.searchBookByTitle)
 router.post("/book/book_devolution/:user_id/:book_id", bookController.bookDevolution)
 
 router.use(authMiddleware);
