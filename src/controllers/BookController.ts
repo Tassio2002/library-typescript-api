@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Like } from "typeorm";
+import { ILike, Like } from "typeorm";
 import { BookRepository } from "../repositories/BookRepositorry";
 import { ReserveRepository } from "../repositories/ReserveRepository";
 import { userRepository } from "../repositories/userRepository";
@@ -160,7 +160,7 @@ export class BookController {
     try {
       const booksResult = await BookRepository.find({
         where: {
-          title: Like(`%${title_search}%`),
+          title: ILike(`%${title_search}%`),
         },
       });
 
@@ -169,7 +169,7 @@ export class BookController {
           message: `No book was found with the title: ${title_search}.`,
         });
       }
-      
+
       return res.status(200).json(booksResult);
     } catch (error) {
       console.log(error);
