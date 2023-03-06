@@ -164,7 +164,7 @@ export class BookController {
         },
       });
 
-      if (booksResult.length === 0) {
+      if (!booksResult.length) {
         return res.status(400).json({
           message: `No book was found with the title: ${title_search}.`,
         });
