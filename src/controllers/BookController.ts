@@ -154,6 +154,7 @@ export class BookController {
       });
     }
   }
+  
   async searchBookByTitle(req: Request, res: Response) {
     const { title_search } = req.body;
 
