@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { ILike, Like } from "typeorm";
+import { ILike } from "typeorm";
 import { BookRepository } from "../repositories/BookRepositorry";
-import { ReserveRepository } from "../repositories/ReserveRepository";
 import { userRepository } from "../repositories/userRepository";
 
 export class BookController {
@@ -18,9 +17,6 @@ export class BookController {
     }
   }
 
-  //Verificar quais ifs podem virar ternário
-  //Transformar objetos em variáveis
-  //apos finalizar fazer commits menores
   async createReserve(req: Request, res: Response) {
     const { user_logged, book_id } = req.params;
 
@@ -45,7 +41,6 @@ export class BookController {
         return res.status(400).json({ message: "Book not found" });
       }
 
-      //-----------Tentar transformar em função(verifica se o livro escolhido pertence ao usuário logado)------------//
       const booksRegisteredIds: number[] = [];
 
       if (booksRegistered !== null) {
@@ -55,39 +50,26 @@ export class BookController {
       }
 
       let bookBelongsLoggedUser: boolean = false;
-      booksRegisteredIds.forEach((id) => {
-        if (id === Number(book_id)) {
-          bookBelongsLoggedUser = true;
-        }
-      });
+
+      booksRegisteredIds.includes(Number(book_id))
+        ? (bookBelongsLoggedUser = true)
+        : false;
 
       if (bookBelongsLoggedUser !== false) {
         return res.status(400).json({
           message: "The book belongs to you, therefore it cannot be reserved.",
         });
       }
-      //----------------------------------------------//
-      const booksReservedIds: number[] = [];
-      if (booksReservedIds !== null) {
-        booksReserved.forEach((book) => {
-          booksReservedIds.push(book);
-        });
-      }
 
-      let isBookReservedLoggedUser: boolean = false;
-      booksReservedIds.forEach((id) => {
-        if (id === Number(book.id)) {
-          isBookReservedLoggedUser = true;
-        }
-      });
+      const booksReservedd: boolean = booksReserved.includes(Number(book_id));
 
-      if (isBookReservedLoggedUser !== false) {
+      if (booksReservedd) {
         return res.status(400).json({
           message:
             "The book has already been booked by you and cannot be booked again.",
         });
       }
-      //----------------------------------------------//
+
       if (book.quantity === 0) {
         return res.status(400).json({
           message: "The chosen book is currently out of units available.",
@@ -95,10 +77,13 @@ export class BookController {
       }
 
       book.quantity -= 1;
-      BookRepository.save(book);
-
       booksReserved.push(book.id);
-      userRepository.save(userLogged);
+
+      await Promise.all([
+        BookRepository.save(book),
+        userRepository.save(userLogged),
+      ]);
+
       return res.status(201).json(userLogged);
     } catch (error) {
       console.log(error);
@@ -154,7 +139,7 @@ export class BookController {
       });
     }
   }
-  
+
   async searchBookByTitle(req: Request, res: Response) {
     const { title_search } = req.body;
 
