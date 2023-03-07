@@ -49,13 +49,9 @@ export class BookController {
         });
       }
 
-      let bookBelongsLoggedUser: boolean = false;
+      const verifybooksRegistered = booksRegisteredIds.includes(Number(book_id))
 
-      booksRegisteredIds.includes(Number(book_id))
-        ? (bookBelongsLoggedUser = true)
-        : false;
-
-      if (bookBelongsLoggedUser !== false) {
+      if (verifybooksRegistered) {
         return res.status(400).json({
           message: "The book belongs to you, therefore it cannot be reserved.",
         });
