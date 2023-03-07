@@ -16,22 +16,27 @@ const errorController = new ErrorController();
 
 router.post("/signup", schemaValidation(UserSchema), userController.signup);
 router.post("/login", schemaValidation(LoginSchema), userController.login);
-router.post(
-  "/create_reserve/:user_logged/:book_id",
-  bookController.createReserve
-);
-router.get("/user/all_users", userController.list);
-router.get("/book/search_book", schemaValidation(SearchSchema), bookController.searchBookByTitle)
-router.post("/book/book_devolution/:user_id/:book_id", bookController.bookDevolution)
-
 router.use(authMiddleware);
-
+router.get("/user/all_users", userController.list);
+router.get("/book/all_books", bookController.list);
 router.post(
   "/book/:user_id/create",
   schemaValidation(BookSchema),
   userController.createBook
 );
-router.get("/book/all_books", bookController.list);
+router.get(
+  "/book/search_book",
+  schemaValidation(SearchSchema),
+  bookController.searchBookByTitle
+);
+router.post(
+  "/create_reserve/:user_logged/:book_id",
+  bookController.createReserve
+);
+router.post(
+  "/book/book_devolution/:user_id/:book_id",
+  bookController.bookDevolution
+);
 
 router.get("*", errorController.error404);
 export default router;
