@@ -82,8 +82,8 @@ export class UserController {
   }
 
   async createBook(req: Request, res: Response) {
-    const { title, quantity, image_url } = req.body;
     const { user_id } = req.params;
+    const { title, quantity, image_url } = req.body;
 
     try {
       const user = await userRepository.findOneBy({ id: Number(user_id) });
@@ -99,7 +99,8 @@ export class UserController {
       });
 
       await BookRepository.save(newBook);
-
+      user.books_registered.push(newBook.id);
+      await userRepository.save(user);
       return res.status(201).json(newBook);
     } catch (error) {
       console.log(error);
