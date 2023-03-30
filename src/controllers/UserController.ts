@@ -38,7 +38,7 @@ export class UserController {
   async login(req: Request, res: Response) {
     const { email, password } = req.body;
     try {
-      const expirationTimeInSeconds = 3000;
+      const expirationTimeInSeconds = 7200; //2 horas
       const user = await userRepository.findOneBy({ email });
 
       if (!user) {
